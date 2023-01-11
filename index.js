@@ -9,10 +9,15 @@ function isLoggedIn(req, res, next){
 
 
 const app = express();
-
-app.use(session({secret: "dogs"}));
+// app.use(session({secret: "dogs"}));
+app.use(session({
+    secret: "cookie_secret",
+    resave: true,
+    saveUninitialized: true
+}));
 app.use(passport.initialize());
 app.use(passport.session());
+
 
 
 app.get("/", (req, res) => {
