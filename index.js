@@ -9,7 +9,6 @@ function isLoggedIn(req, res, next){
 
 
 const app = express();
-// app.use(session({secret: "dogs"}));
 app.use(session({
     secret: "cookie_secret",
     resave: true,
@@ -20,9 +19,9 @@ app.use(passport.session());
 
 
 
-app.get("/", (req, res) => {
-    res.send('<a href="/auth/google"> Auth with Google </a>');
-});
+// app.get("/", (req, res) => {
+//     res.send('<a href="/auth/google"> Auth with Google </a>');
+// });
 
 
 app.get("/auth/google", 
@@ -31,7 +30,7 @@ app.get("/auth/google",
 
 app.get("/auth/google/callback",
     passport.authenticate("google", {
-        successRedirect: "/protected",
+        successRedirect: "/Secret",
         failureRedirect: "/auth/failure"
     })
 );
@@ -40,7 +39,7 @@ app.get("/auth/failure", (req, res)=> {
     res.send("Something went wrong. User dind't verified");
 })
 
-app.get("/protected", isLoggedIn, (req, res)=> {
+app.get("/Secret", isLoggedIn, (req, res)=> {
     res.send(`Hello this is secret page ${req.user.displayName}`);
 });
 
