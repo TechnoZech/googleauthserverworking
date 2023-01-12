@@ -1,56 +1,30 @@
+const cookieSession = require("cookie-session");
 const express = require("express");
-const session = require("express-session");
+const cors = require("cors");
+const passportSetup = require("./passport");
 const passport = require("passport");
-require("./auth");
-
-function isLoggedIn(req, res, next){
-    req.user ? next() : res.sendStatus(401);
-}
-
-
+const authRoute = require("./routes/auth");
 const app = express();
-app.use(session({
-    secret: "cookie_secret",
-    resave: true,
-    saveUninitialized: true
-}));
+require('dotenv').config()
+
+app.use(
+  cookieSession({ name: "session", keys: ["lama"], maxAge: 24 * 60 * 60 * 100 })
+);
+
 app.use(passport.initialize());
 app.use(passport.session());
 
-
-
-// app.get("/", (req, res) => {
-//     res.send('<a href="/auth/google"> Auth with Google </a>');
-// });
-
-
-app.get("/auth/google", 
-    passport.authenticate("google", {scope: ["email", "profile"]})
+app.use(
+  cors({
+    origin: `${process.env.CLIENT_URL}`,
+    methods: "GET,POST,PUT,DELETE",
+    credentials: true,
+  })
 );
 
-app.get("/auth/google/callback",
-    passport.authenticate("google", {
-        successRedirect: "/Secret",
-        failureRedirect: "/auth/failure"
-    })
-);
+app.use("/auth", authRoute);
 
-app.get("/auth/failure", (req, res)=> {
-    res.send("Something went wrong. User dind't verified");
-})
 
-app.get("/Secret", isLoggedIn, (req, res)=> {
-    res.send(`Hello this is secret page ${req.user.displayName}`);
+app.listen(process.env.PORT, () => {
+    console.log(`Listenting on port ${process.env.PORT}...`)
 });
-
-app.get("/logout", (req, res)=>{
-    req.logout(req.user, err =>{
-        if(!err){
-            req.session.destroy();
-            res.send("goodbye!");
-        }
-    });
-    
-})
-
-app.listen(5000, ()=>console.log("listening on port 5000"));
