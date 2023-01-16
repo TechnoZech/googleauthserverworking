@@ -11,9 +11,8 @@ app.use(
   cookieSession({ 
     name: "session", 
     keys: ["lama"], 
-    maxAge: 24 * 60 * 60 * 100, 
-    httpOnly: true,
-    SameSite: "none",
+    maxAge: 24 * 60 * 60 * 100,
+    sameSite: "none",
   })
 );
 
@@ -25,7 +24,6 @@ app.use(
     origin: `${process.env.CLIENT_URL}`,
     methods: "GET,POST,PUT,DELETE",
     credentials: true,
-    
   })
 );
 
