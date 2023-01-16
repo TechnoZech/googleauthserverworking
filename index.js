@@ -8,7 +8,14 @@ const app = express();
 require('dotenv').config()
 
 app.use(
-  cookieSession({ name: "session", keys: ["lama"], maxAge: 24 * 60 * 60 * 100 })
+  cookieSession({ 
+    name: "session", 
+    keys: ["lama"], 
+    maxAge: 24 * 60 * 60 * 100, 
+    httpOnly: true,
+    sameSite: 'none', 
+    secure: false,
+  })
 );
 
 app.use(passport.initialize());
@@ -19,6 +26,7 @@ app.use(
     origin: `${process.env.CLIENT_URL}`,
     methods: "GET,POST,PUT,DELETE",
     credentials: true,
+    
   })
 );
 
