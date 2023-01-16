@@ -13,8 +13,7 @@ app.use(
     keys: ["lama"], 
     maxAge: 24 * 60 * 60 * 100, 
     httpOnly: true,
-    sameSite: 'none', 
-    secure: true,
+    SameSite: "none",
   })
 );
 
